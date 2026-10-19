@@ -1188,7 +1188,10 @@ function BindDialog(props) {
   }, [mode])
 
   // ── 授权中 ──
-  if (mode === 'acquiring') {
+  // 只包成函数，真正的 return 放到所有 hook 之后（见下方）。
+  // 否则 mode 切到 acquiring 时本组件少调 4 个 hook，React 会抛 #300：
+  // "Rendered fewer hooks than expected. This may be caused by an accidental early return statement."
+  var renderAcquiring = function () {
     return h('div', { className: 'dsh-ima-dlg' },
       h('h3', null, '正在打开浏览器…'),
       h('div', { className: 'dsh-ima-note', style: { marginTop: '10px' } },
@@ -1260,6 +1263,9 @@ function BindDialog(props) {
       clearInterval(timer)
     }
   }, [mode, autoFailed, busy])
+
+  // 所有 hook 都已声明完，这里才可以按 mode 提前 return（顺序必须与上面的 hook 保持一致）
+  if (mode === 'acquiring') return renderAcquiring()
 
   // ── 备用方式：自己去 ima 页面复制，回来自动识别 ──
   if (mode === 'pagewait') {
