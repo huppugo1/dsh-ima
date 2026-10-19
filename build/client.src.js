@@ -20,102 +20,109 @@ var API = '/api/ima'
 
 // ── 样式 ─────────────────────────────────────────────────
 var CSS = [
-  '.dsh-ima-root{display:flex;flex-direction:column;height:100%;font-size:var(--dsw-font-base-font-size,14px);line-height:1.65;color:var(--dsw-alias-label-primary,#1a1a1a);background:var(--dsw-alias-bg-primary,#fff);font-family:var(--dsw-font-family,inherit)}',
-  '.dsh-ima-head{display:flex;align-items:center;gap:8px;padding:12px 16px;border-bottom:1px solid var(--dsw-alias-border-secondary,rgba(0,0,0,.08));flex-shrink:0}',
+  '.dsh-ima-root{display:flex;flex-direction:column;height:100%;font-size:var(--dsh-content-font-size,14px);line-height:1.65;color:var(--dsw-alias-label-primary,#1a1a1a);background:var(--dsw-alias-bg-base,#fff);font-family:var(--dsw-font-family,inherit)}',
+  '.dsh-ima-head{display:flex;align-items:center;gap:8px;padding:12px 16px;border-bottom:1px solid var(--dsw-alias-border-l1,rgba(0,0,0,.08));flex-shrink:0}',
   '.dsh-ima-title{font-size:1.08em;font-weight:500}',
   '.dsh-ima-spacer{flex:1;min-width:0}',
   '.dsh-ima-badge{font-size:.88em;color:var(--dsw-alias-label-secondary,#666)}',
   '.dsh-ima-stamp{font-size:.85em;color:var(--dsw-alias-label-tertiary,#999);white-space:nowrap}',
-  '.dsh-ima-btn{display:inline-flex;align-items:center;gap:5px;font-size:.92em;padding:5px 11px;border-radius:6px;border:1px solid var(--dsw-alias-border-secondary,rgba(0,0,0,.12));background:transparent;color:var(--dsw-alias-label-primary,#1a1a1a);cursor:pointer;font-family:inherit;line-height:1.45;white-space:nowrap;text-decoration:none}',
+  '.dsh-ima-btn{display:inline-flex;align-items:center;gap:5px;font-size:.92em;padding:5px 11px;border-radius:var(--dsw-radius-sm,6px);border:1px solid var(--dsw-alias-border-l2,rgba(0,0,0,.12));background:transparent;color:var(--dsw-alias-label-primary,#1a1a1a);cursor:pointer;font-family:inherit;line-height:1.45;white-space:nowrap;text-decoration:none}',
   // ⚠️ 主按钮必须单独写 hover：.dsh-ima-btn:hover 的优先级高于 .dsh-ima-btn-p，
   //    不覆盖的话悬停时蓝底会被换成浅色，而文字仍是白色 → 白字白底看不见
   '.dsh-ima-btn:hover{background:var(--dsw-alias-interactive-bg-hover,rgba(0,0,0,.05))}',
-  '.dsh-ima-btn-p{background:var(--dsw-alias-interactive-bg-primary,#3b6cf6);border-color:var(--dsw-alias-interactive-bg-primary,#3b6cf6);color:#fff}',
-  '.dsh-ima-btn-p:hover{background:var(--dsw-alias-interactive-bg-primary,#3b6cf6);border-color:var(--dsw-alias-interactive-bg-primary,#3b6cf6);color:#fff;filter:brightness(.9)}',
+  '.dsh-ima-btn-p{background:var(--dsw-alias-button-primary-fill,#3b6cf6);border-color:var(--dsw-alias-button-primary-fill,#3b6cf6);color:var(--dsw-alias-label-primary-inverted,#fff)}',
+  '.dsh-ima-btn-p:hover{background:var(--dsw-alias-button-primary-hover,#3b6cf6);border-color:var(--dsw-alias-button-primary-hover,#3b6cf6);color:var(--dsw-alias-label-primary-inverted,#fff)}',
   '.dsh-ima-btn-p:active{filter:brightness(.82)}',
-  '.dsh-ima-btn-d{color:var(--dsw-alias-status-danger,#d93838)}',
-  '.dsh-ima-btn-d:hover{background:var(--dsw-alias-interactive-bg-hover,rgba(0,0,0,.05));color:var(--dsw-alias-status-danger,#d93838)}',
+  '.dsh-ima-btn-d{color:var(--dsw-alias-state-error-primary,#d93838)}',
+  '.dsh-ima-btn-d:hover{background:var(--dsw-alias-interactive-bg-hover,rgba(0,0,0,.05));color:var(--dsw-alias-state-error-primary,#d93838)}',
   '.dsh-ima-btn:disabled{opacity:.45;cursor:default;filter:none}',
-  '.dsh-ima-btn-p:disabled{background:var(--dsw-alias-interactive-bg-primary,#3b6cf6);color:#fff}',
-  '.dsh-ima-ibtn{display:inline-flex;align-items:center;justify-content:center;width:28px;height:28px;padding:0;border:none;border-radius:6px;background:transparent;color:var(--dsw-alias-label-secondary,#666);cursor:pointer;flex-shrink:0}',
+  '.dsh-ima-btn-p:disabled{background:var(--dsw-alias-button-primary-dimmed,#3b6cf6);color:var(--dsw-alias-label-primary-inverted,#fff)}',
+  '.dsh-ima-ibtn{display:inline-flex;align-items:center;justify-content:center;width:28px;height:28px;padding:0;border:none;border-radius:var(--dsw-radius-sm,6px);background:transparent;color:var(--dsw-alias-label-secondary,#666);cursor:pointer;flex-shrink:0}',
   '.dsh-ima-ibtn:hover{background:var(--dsw-alias-interactive-bg-hover,rgba(0,0,0,.05))}',
   '.dsh-ima-body{flex:1;display:flex;min-height:0}',
-  '.dsh-ima-kbs{width:230px;border-right:1px solid var(--dsw-alias-border-secondary,rgba(0,0,0,.08));overflow:auto;padding:10px;flex-shrink:0}',
-  '.dsh-ima-kb{display:flex;align-items:center;gap:8px;padding:8px 10px;border-radius:6px;cursor:pointer;margin-bottom:2px}',
+  '.dsh-ima-kbs{width:230px;border-right:1px solid var(--dsw-alias-border-l1,rgba(0,0,0,.08));overflow:auto;padding:10px;flex-shrink:0}',
+  '.dsh-ima-kb{display:flex;align-items:center;gap:8px;padding:8px 10px;border-radius:var(--dsw-radius-sm,6px);cursor:pointer;margin-bottom:2px}',
   '.dsh-ima-kb:hover{background:var(--dsw-alias-interactive-bg-hover,rgba(0,0,0,.05))}',
-  '.dsh-ima-kb-on{background:var(--dsw-alias-interactive-bg-hover,rgba(0,0,0,.05))}',
+  '.dsh-ima-kb-on{background:var(--dsw-alias-bg-module-platform,var(--dsw-alias-interactive-bg-hover,rgba(0,0,0,.05)))}',
   '.dsh-ima-kb-name{flex:1;font-size:1em;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}',
-  '.dsh-ima-tag{font-size:.8em;padding:2px 6px;border-radius:4px;flex-shrink:0}',
-  '.dsh-ima-tag-s{background:#e1f5ee;color:#085041}',
-  '.dsh-ima-tag-m{background:#e6f1fb;color:#0c447c}',
+  '.dsh-ima-tag{font-size:.8em;padding:2px 6px;border-radius:var(--dsw-radius-xs,4px);flex-shrink:0}',
+  '.dsh-ima-tag-s{background:var(--dsw-alias-markdown-tag,#e1f5ee);color:var(--dsw-alias-label-secondary,#666)}',
+  '.dsh-ima-tag-m{background:var(--dsw-alias-markdown-tag,#e6f1fb);color:var(--dsw-alias-label-secondary,#666)}',
   '.dsh-ima-main{flex:1;overflow:auto;padding:14px 18px;min-width:0;display:flex;flex-direction:column}',
   '.dsh-ima-center{flex:1;display:flex;align-items:center;justify-content:center;padding:24px;overflow:auto}',
-  '.dsh-ima-dlg{width:460px;max-width:100%;box-sizing:border-box;background:var(--dsw-alias-bg-primary,#fff);border:1px solid var(--dsw-alias-border-secondary,rgba(0,0,0,.1));border-radius:12px;padding:24px;box-shadow:0 8px 32px rgba(0,0,0,.10);font-size:var(--dsw-font-base-font-size,14px)}',
+  '.dsh-ima-dlg{width:460px;max-width:100%;box-sizing:border-box;background:var(--dsw-alias-bg-layer-2,#fff);border:1px solid var(--dsw-alias-border-l3,rgba(0,0,0,.1));border-radius:var(--dsw-radius-md,12px);padding:24px;box-shadow:var(--dsw-shadow-lv3,0 8px 32px rgba(0,0,0,.10));font-size:var(--dsh-content-font-size,14px)}',
   '.dsh-ima-crumb{font-size:1em;color:var(--dsw-alias-label-secondary,#666);margin-bottom:12px;display:flex;align-items:center;gap:8px;min-width:0;flex-shrink:0}',
   '.dsh-ima-crumb a{color:inherit;cursor:pointer;text-decoration:none;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}',
   '.dsh-ima-crumb a:hover{text-decoration:underline}',
-  '.dsh-ima-item{display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:6px;cursor:pointer;flex-shrink:0}',
+  '.dsh-ima-item{display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:var(--dsw-radius-sm,6px);cursor:pointer;flex-shrink:0}',
   // 左侧分组（对齐 ima 自己的「个人知识库 / 共享知识库」折叠分组）
   '.dsh-ima-kbsec{margin-bottom:4px}',
-  '.dsh-ima-kbsec-h{display:flex;align-items:center;gap:5px;padding:6px 6px 4px;font-size:.92em;color:var(--dsw-alias-label-secondary,#666);cursor:pointer;user-select:none;border-radius:6px}',
+  '.dsh-ima-kbsec-h{display:flex;align-items:center;gap:5px;padding:6px 6px 4px;font-size:.92em;color:var(--dsw-alias-label-secondary,#666);cursor:pointer;user-select:none;border-radius:var(--dsw-radius-sm,6px)}',
   '.dsh-ima-kbsec-h:hover{color:var(--dsw-alias-label-primary,#1a1a1a)}',
   '.dsh-ima-kbsec-t{font-weight:500}',
   '.dsh-ima-chev{display:inline-flex;color:var(--dsw-alias-label-tertiary,#999);transition:transform .15s ease}',
   '.dsh-ima-chev-off{transform:rotate(-90deg)}',
-  '.dsh-ima-kbsec-add{width:20px;height:20px;padding:0;border:none;background:transparent;color:var(--dsw-alias-label-tertiary,#999);font-size:1.15em;line-height:1;border-radius:5px;cursor:pointer;font-family:inherit}',
+  '.dsh-ima-kbsec-add{width:20px;height:20px;padding:0;border:none;background:transparent;color:var(--dsw-alias-label-tertiary,#999);font-size:1.15em;line-height:1;border-radius:var(--dsw-radius-xs,5px);cursor:pointer;font-family:inherit}',
   '.dsh-ima-kbsec-add:hover{background:var(--dsw-alias-interactive-bg-hover,rgba(0,0,0,.06));color:var(--dsw-alias-label-primary,#1a1a1a)}',
   '.dsh-ima-item:hover{background:var(--dsw-alias-interactive-bg-hover,rgba(0,0,0,.05))}',
   '.dsh-ima-item-t{flex:1;font-size:1em;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0}',
   '.dsh-ima-item-y{font-size:.85em;color:var(--dsw-alias-label-tertiary,#999);flex-shrink:0}',
   // 行内操作：图标+文字，常驻显示（之前只显示图标且要悬停才出现，太不显眼）
   '.dsh-ima-act{display:flex;gap:6px;flex-shrink:0;margin-left:6px}',
-  '.dsh-ima-actbtn{display:inline-flex;align-items:center;gap:5px;font-size:.86em;padding:4px 10px;border-radius:6px;border:1px solid var(--dsw-alias-border-secondary,rgba(0,0,0,.14));background:transparent;color:var(--dsw-alias-label-secondary,#666);cursor:pointer;font-family:inherit;line-height:1.45;white-space:nowrap}',
+  '.dsh-ima-actbtn{display:inline-flex;align-items:center;gap:5px;font-size:.86em;padding:4px 10px;border-radius:var(--dsw-radius-sm,6px);border:1px solid var(--dsw-alias-border-l2,rgba(0,0,0,.14));background:transparent;color:var(--dsw-alias-label-secondary,#666);cursor:pointer;font-family:inherit;line-height:1.45;white-space:nowrap}',
   '.dsh-ima-actbtn:hover{background:var(--dsw-alias-interactive-bg-hover,rgba(0,0,0,.05));color:var(--dsw-alias-label-primary,#1a1a1a)}',
-  '.dsh-ima-actbtn-p{color:var(--dsw-alias-interactive-bg-primary,#3b6cf6);border-color:var(--dsw-alias-interactive-bg-primary,#3b6cf6);font-weight:500}',
-  '.dsh-ima-actbtn-p:hover{background:var(--dsw-alias-interactive-bg-hover,rgba(0,0,0,.05));color:var(--dsw-alias-interactive-bg-primary,#3b6cf6)}',
+  '.dsh-ima-actbtn-p{color:var(--dsw-alias-link,#3b6cf6);border-color:var(--dsw-alias-link,#3b6cf6);font-weight:500}',
+  '.dsh-ima-actbtn-p:hover{background:var(--dsw-alias-interactive-bg-hover,rgba(0,0,0,.05));color:var(--dsw-alias-link,#3b6cf6)}',
   '.dsh-ima-empty{padding:48px 20px;text-align:center;color:var(--dsw-alias-label-tertiary,#999);font-size:1em}',
-  '.dsh-ima-err{font-size:.92em;color:var(--dsw-alias-status-danger,#d93838);padding:10px 16px;line-height:1.6;flex-shrink:0}',
-  '.dsh-ima-pre{white-space:pre-wrap;word-break:break-word;font-size:1em;line-height:1.75;background:var(--dsw-alias-bg-secondary,#f5f5f5);border-radius:8px;padding:16px;margin-top:12px;overflow:auto;font-family:var(--dsw-font-family,inherit)}',
-  '.dsh-ima-vbox{margin-top:12px;border-radius:8px;overflow:hidden;background:var(--dsw-alias-bg-secondary,#f5f5f5)}',
+  '.dsh-ima-err{font-size:.92em;color:var(--dsw-alias-state-error-primary,#d93838);padding:10px 16px;line-height:1.6;flex-shrink:0}',
+  '.dsh-ima-pre{white-space:pre-wrap;word-break:break-word;font-size:1em;line-height:1.75;background:var(--dsw-alias-bg-layer-2,#f5f5f5);border-radius:var(--dsw-radius-sm,8px);padding:16px;margin-top:12px;overflow:auto;font-family:var(--dsw-font-family,inherit)}',
+  '.dsh-ima-vbox{margin-top:12px;border-radius:var(--dsw-radius-sm,8px);overflow:hidden;background:var(--dsw-alias-bg-layer-2,#f5f5f5)}',
   '.dsh-ima-vbox>div{height:100%}',
   '.dsh-ima-md h1{font-size:1.45em;font-weight:500;margin:1em 0 .5em}',
   '.dsh-ima-md h2{font-size:1.25em;font-weight:500;margin:1em 0 .5em}',
   '.dsh-ima-md h3{font-size:1.1em;font-weight:500;margin:.9em 0 .5em}',
   '.dsh-ima-md h4,.dsh-ima-md h5,.dsh-ima-md h6{font-size:1em;font-weight:500;margin:.8em 0 .4em}',
   '.dsh-ima-md p{margin:.55em 0}',
-  '.dsh-ima-md code{font-size:.92em;background:var(--dsw-alias-bg-tertiary,rgba(0,0,0,.06));padding:1px 5px;border-radius:4px;font-family:ui-monospace,Menlo,Consolas,monospace}',
-  '.dsh-ima-md pre{background:var(--dsw-alias-bg-tertiary,rgba(0,0,0,.06));border-radius:6px;padding:10px 12px;overflow:auto;margin:.6em 0}',
+  '.dsh-ima-md code{font-size:.92em;background:var(--dsw-alias-markdown-inline-code,rgba(0,0,0,.06));padding:1px 5px;border-radius:var(--dsw-radius-xs,4px);font-family:ui-monospace,Menlo,Consolas,monospace}',
+  '.dsh-ima-md pre{background:var(--dsw-alias-markdown-code-block,rgba(0,0,0,.06));border-radius:var(--dsw-radius-sm,6px);padding:10px 12px;overflow:auto;margin:.6em 0}',
   '.dsh-ima-md pre code{background:none;padding:0}',
   '.dsh-ima-md strong{font-weight:500}',
   '.dsh-ima-md em{font-style:italic}',
   '.dsh-ima-md ul,.dsh-ima-md ol{padding-left:1.5em;margin:.5em 0}',
   '.dsh-ima-md li{margin:.22em 0}',
-  '.dsh-ima-md a{color:var(--dsw-alias-interactive-bg-primary,#3b6cf6);text-decoration:none;word-break:break-all}',
+  '.dsh-ima-md a{color:var(--dsw-alias-link,#3b6cf6);text-decoration:none;word-break:break-all}',
   '.dsh-ima-md a:hover{text-decoration:underline}',
-  '.dsh-ima-md hr{border:none;border-top:1px solid var(--dsw-alias-border-secondary,rgba(0,0,0,.12));margin:1em 0}',
-  '.dsh-ima-md blockquote{margin:.6em 0;padding:.1em 0 .1em .9em;border-left:2px solid var(--dsw-alias-border-secondary,rgba(0,0,0,.16));color:var(--dsw-alias-label-secondary,#666)}',
+  '.dsh-ima-md hr{border:none;border-top:1px solid var(--dsw-alias-border-l2,rgba(0,0,0,.12));margin:1em 0}',
+  '.dsh-ima-md blockquote{margin:.6em 0;padding:.1em 0 .1em .9em;border-left:2px solid var(--dsw-alias-border-l2,rgba(0,0,0,.16));color:var(--dsw-alias-label-secondary,#666)}',
   // 会议听记的发言人行（ima 听记类笔记展平后靠「发言人N 时间戳」还原）
-  '.dsh-ima-spk{display:inline-block;margin:.9em 0 .15em;padding:1px 8px;border-radius:5px;background:var(--dsw-alias-bg-tertiary,rgba(0,0,0,.06));color:var(--dsw-alias-label-secondary,#666);font-size:.88em;line-height:1.6;font-variant-numeric:tabular-nums}',
+  '.dsh-ima-spk{display:inline-block;margin:.9em 0 .15em;padding:1px 8px;border-radius:var(--dsw-radius-xs,5px);background:var(--dsw-alias-markdown-tag,rgba(0,0,0,.06));color:var(--dsw-alias-label-secondary,#666);font-size:.88em;line-height:1.6;font-variant-numeric:tabular-nums}',
   '.dsh-ima-md>:first-child{margin-top:0}',
   '.dsh-ima-md>:last-child{margin-bottom:0}',
-  '.dsh-ima-rawhint{font-size:.85em;color:var(--dsw-alias-label-tertiary,#999);line-height:1.7;margin-top:10px;padding-top:10px;border-top:1px solid var(--dsw-alias-border-secondary,rgba(0,0,0,.08))}',
+  '.dsh-ima-rawhint{font-size:.85em;color:var(--dsw-alias-label-tertiary,#999);line-height:1.7;margin-top:10px;padding-top:10px;border-top:1px solid var(--dsw-alias-border-l1,rgba(0,0,0,.08))}',
   '.dsh-ima-dlg h3{margin:0 0 8px;font-size:1.12em;font-weight:500}',
   '.dsh-ima-f{margin-top:14px}',
   '.dsh-ima-f label{display:block;font-size:.92em;color:var(--dsw-alias-label-secondary,#666);margin-bottom:6px}',
-  '.dsh-ima-f input{width:100%;box-sizing:border-box;font-size:.95em;padding:9px 11px;border-radius:6px;border:1px solid var(--dsw-alias-border-secondary,rgba(0,0,0,.12));background:var(--dsw-alias-bg-primary,#fff);color:var(--dsw-alias-label-primary,#1a1a1a);font-family:inherit}',
+  '.dsh-ima-f input{width:100%;box-sizing:border-box;font-size:.95em;padding:9px 11px;border-radius:var(--dsw-radius-sm,6px);border:1px solid var(--dsw-alias-border-l2,rgba(0,0,0,.12));background:var(--dsw-alias-bg-layer-2,#fff);color:var(--dsw-alias-label-primary,#1a1a1a);font-family:inherit}',
   '.dsh-ima-acts{display:flex;gap:8px;justify-content:flex-end;align-items:center;margin-top:20px}',
   '.dsh-ima-link{background:none;border:none;padding:0;font-size:.88em;color:var(--dsw-alias-label-tertiary,#999);cursor:pointer;font-family:inherit;text-decoration:underline;text-underline-offset:2px}',
   '.dsh-ima-link:hover{color:var(--dsw-alias-label-secondary,#666)}',
   '.dsh-ima-step{display:flex;gap:10px;margin-top:16px;align-items:flex-start}',
-  '.dsh-ima-stepno{flex-shrink:0;width:20px;height:20px;border-radius:50%;background:var(--dsw-alias-bg-secondary,#f0f0f0);color:var(--dsw-alias-label-secondary,#666);font-size:.85em;display:inline-flex;align-items:center;justify-content:center;margin-top:2px}',
-  '.dsh-ima-tip2{font-size:.9em;color:var(--dsw-alias-status-success,#1a9e6a);background:var(--dsw-alias-bg-secondary,#f5f5f5);border-radius:6px;padding:8px 12px;margin-top:14px;line-height:1.6}',
-  '.dsh-ima-big{width:100%;box-sizing:border-box;padding:12px;font-size:1.05em;margin-top:18px;border-radius:8px}',
+  '.dsh-ima-stepno{flex-shrink:0;width:20px;height:20px;border-radius:50%;background:var(--dsw-alias-bg-layer-3,#f0f0f0);color:var(--dsw-alias-label-secondary,#666);font-size:.85em;display:inline-flex;align-items:center;justify-content:center;margin-top:2px}',
+  '.dsh-ima-tip2{font-size:.9em;color:var(--dsw-alias-state-success-primary,#1a9e6a);background:var(--dsw-alias-bg-layer-2,#f5f5f5);border-radius:var(--dsw-radius-sm,6px);padding:8px 12px;margin-top:14px;line-height:1.6}',
+  '.dsh-ima-big{width:100%;box-sizing:border-box;padding:12px;font-size:1.05em;margin-top:18px;border-radius:var(--dsw-radius-sm,8px)}',
   '.dsh-ima-waitbar{display:flex;align-items:center;gap:8px;font-size:.92em;color:var(--dsw-alias-label-secondary,#666);margin-top:14px}',
-  '.dsh-ima-spin{display:inline-block;width:13px;height:13px;border:2px solid var(--dsw-alias-border-secondary,rgba(0,0,0,.15));border-top-color:var(--dsw-alias-interactive-bg-primary,#3b6cf6);border-radius:50%;animation:dsh-ima-rot .8s linear infinite}',
+  '.dsh-ima-spin{display:inline-block;width:13px;height:13px;border:2px solid var(--dsw-alias-border-l2,rgba(0,0,0,.15));border-top-color:var(--dsw-alias-link,#3b6cf6);border-radius:50%;animation:dsh-ima-rot .8s linear infinite}',
   '@keyframes dsh-ima-rot{to{transform:rotate(360deg)}}',
-  '.dsh-ima-filled{font-size:.9em;color:var(--dsw-alias-label-secondary,#666);background:var(--dsw-alias-bg-secondary,#f5f5f5);border-radius:6px;padding:10px 12px;margin-top:14px;line-height:1.9;font-family:ui-monospace,Menlo,Consolas,monospace}',
+  '.dsh-ima-filled{font-size:.9em;color:var(--dsw-alias-label-secondary,#666);background:var(--dsw-alias-bg-layer-2,#f5f5f5);border-radius:var(--dsw-radius-sm,6px);padding:10px 12px;margin-top:14px;line-height:1.9;font-family:ui-monospace,Menlo,Consolas,monospace}',
   '.dsh-ima-note{font-size:.92em;color:var(--dsw-alias-label-secondary,#666);line-height:1.7}',
-  '.dsh-ima-toast{position:fixed;bottom:28px;left:50%;transform:translateX(-50%);background:rgba(0,0,0,.82);color:#fff;font-size:.92em;padding:9px 18px;border-radius:8px;z-index:3000;pointer-events:none}',
+  '.dsh-ima-toast{position:fixed;bottom:28px;left:50%;transform:translateX(-50%);background:var(--dsw-alias-toast-bg,rgba(0,0,0,.82));color:var(--dsw-alias-toast-label,#fff);font-size:.92em;padding:9px 18px;border-radius:var(--dsw-radius-sm,8px);box-shadow:var(--dsw-shadow-lv2,0 4px 16px rgba(0,0,0,.16));z-index:3000;pointer-events:none}',
+  // 滚动条与焦点环：跟随 DSH 主题（深色下默认滚动条几乎不可见）
+  '.dsh-ima-kbs,.dsh-ima-main,.dsh-ima-pre,.dsh-ima-md pre{scrollbar-width:thin;scrollbar-color:var(--dsw-alias-scrollbar-bg-l1,rgba(0,0,0,.2)) transparent}',
+  '.dsh-ima-kbs::-webkit-scrollbar,.dsh-ima-main::-webkit-scrollbar,.dsh-ima-pre::-webkit-scrollbar,.dsh-ima-md pre::-webkit-scrollbar{width:8px;height:8px}',
+  '.dsh-ima-kbs::-webkit-scrollbar-thumb,.dsh-ima-main::-webkit-scrollbar-thumb,.dsh-ima-pre::-webkit-scrollbar-thumb,.dsh-ima-md pre::-webkit-scrollbar-thumb{background:var(--dsw-alias-scrollbar-bg-l1,rgba(0,0,0,.2));border-radius:var(--dsw-radius-xs,4px)}',
+  '.dsh-ima-kbs::-webkit-scrollbar-thumb:hover,.dsh-ima-main::-webkit-scrollbar-thumb:hover,.dsh-ima-pre::-webkit-scrollbar-thumb:hover,.dsh-ima-md pre::-webkit-scrollbar-thumb:hover{background:var(--dsw-alias-scrollbar-hover-l1,rgba(0,0,0,.32))}',
+  '.dsh-ima-kbs::-webkit-scrollbar-track,.dsh-ima-main::-webkit-scrollbar-track,.dsh-ima-pre::-webkit-scrollbar-track,.dsh-ima-md pre::-webkit-scrollbar-track{background:transparent}',
+  '.dsh-ima-btn:focus-visible,.dsh-ima-ibtn:focus-visible,.dsh-ima-actbtn:focus-visible,.dsh-ima-f input:focus-visible{outline:var(--dsw-focus-ring-width,2px) solid var(--dsw-focus-ring-color,var(--dsw-alias-state-business-primary,#3b6cf6));outline-offset:1px}',
 ].join('')
 
 var CSS_TAG_ID = 'dsh-ima/panel.css'
@@ -628,6 +635,38 @@ function beautifyNoteText(raw, title) {
   return out.replace(/[ \t]+\n/g, '\n').replace(/\n{3,}/g, '\n\n').replace(/^\n+/, '')
 }
 
+// ── 跟随 DSH 明暗主题 ────────────────────────────────────
+// DSH 用 <body data-ds-dark-theme> 表示深色（主题包会随之重绑 alias 令牌）。
+// 预览引擎自己的 theme:'auto' 只看系统偏好，与 DSH 的设置可能不一致，
+// 所以这里直接读 DSH 的标记，并在主题切换时重建预览。
+var DSH_DARK_ATTR = 'data-ds-dark-theme'
+function isDshDark() {
+  if (typeof document === 'undefined') return false
+  if (document.body && document.body.hasAttribute(DSH_DARK_ATTR)) return true
+  var src = (document.documentElement && document.documentElement.getAttribute('data-ds-theme-source') || '').toLowerCase()
+  return src === 'dark'
+}
+function useDshDark() {
+  var pair = React.useState(isDshDark)
+  React.useEffect(function () {
+    var update = function () { pair[1](isDshDark()) }
+    var mo = null
+    if (typeof MutationObserver === 'function') {
+      mo = new MutationObserver(update)
+      if (document.body) mo.observe(document.body, { attributes: true, attributeFilter: [DSH_DARK_ATTR] })
+      if (document.documentElement) mo.observe(document.documentElement, { attributes: true, attributeFilter: ['data-ds-theme-source', 'class', 'style'] })
+    }
+    var mq = window.matchMedia ? window.matchMedia('(prefers-color-scheme: dark)') : null
+    if (mq && mq.addEventListener) mq.addEventListener('change', update)
+    update()
+    return function () {
+      if (mo) mo.disconnect()
+      if (mq && mq.removeEventListener) mq.removeEventListener('change', update)
+    }
+  }, [])
+  return pair[0]
+}
+
 // ── 预览挂载器（真正用 open-file-viewer 渲染） ────────────
 // 引擎认不出的格式（比如 PDF —— 我们没打 pdfPlugin，它有 Node 原生依赖）
 // 自动退回浏览器原生 iframe，不让用户看到空白
@@ -636,6 +675,7 @@ function ViewerBox(props) {
   var instRef = React.useRef(null)
   var fs = React.useState(false)
   var fallback = fs[0], setFallback = fs[1]
+  var dark = useDshDark()
 
   React.useEffect(function () { setFallback(false) }, [props.source])
 
@@ -654,7 +694,7 @@ function ViewerBox(props) {
         width: '100%',
         fit: 'contain',
         toolbar: true,
-        theme: 'auto',
+        theme: dark ? 'dark' : 'light',
         plugins: V.makePlugins(),
         onUnsupported: function () { if (!destroyed) setFallback(true) },
         onError: function () { if (!destroyed) setFallback(true) },
@@ -667,7 +707,7 @@ function ViewerBox(props) {
       destroyed = true
       if (instRef.current) { try { instRef.current.destroy() } catch (e) {} instRef.current = null }
     }
-  }, [props.source, props.fileName, fallback])
+  }, [props.source, props.fileName, fallback, dark])
 
   if (fallback) {
     // 原生兜底：PDF / 图片 / 音视频浏览器都能直接渲染
@@ -1188,7 +1228,10 @@ function BindDialog(props) {
   }, [mode])
 
   // ── 授权中 ──
-  if (mode === 'acquiring') {
+  // 只包成函数，真正的 return 放到所有 hook 之后（见下方）。
+  // 否则 mode 切到 acquiring 时本组件少调 4 个 hook，React 会抛 #300：
+  // "Rendered fewer hooks than expected. This may be caused by an accidental early return statement."
+  var renderAcquiring = function () {
     return h('div', { className: 'dsh-ima-dlg' },
       h('h3', null, '正在打开浏览器…'),
       h('div', { className: 'dsh-ima-note', style: { marginTop: '10px' } },
@@ -1260,6 +1303,9 @@ function BindDialog(props) {
       clearInterval(timer)
     }
   }, [mode, autoFailed, busy])
+
+  // 所有 hook 都已声明完，这里才可以按 mode 提前 return（顺序必须与上面的 hook 保持一致）
+  if (mode === 'acquiring') return renderAcquiring()
 
   // ── 备用方式：自己去 ima 页面复制，回来自动识别 ──
   if (mode === 'pagewait') {
@@ -1386,7 +1432,7 @@ function BindDialog(props) {
         : '点下面的按钮就开始，接下来只需要登录 ima —— 不用复制粘贴。'),
 
     hostStale
-      ? h('div', { className: 'dsh-ima-tip2', style: { color: 'var(--dsw-alias-status-warning,#b26a00)' } },
+      ? h('div', { className: 'dsh-ima-tip2', style: { color: 'var(--dsw-alias-state-warn-primary,#b26a00)' } },
           '提示：插件更新过但 DSH 还没重启，自动打开浏览器可能用不了。重启 DSH 后即可。')
       : null,
 

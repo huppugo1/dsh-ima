@@ -33,6 +33,8 @@
 | 网页类 | 网页、微信文章点击直接在新窗口打开原文 |
 | 引用到对话 | 文件一键交给 agent 读取 |
 | Agent 工具 | 5 个工具，含**按正文内容搜索** |
+| 会话技能 | 自带 3 个技能（检索 / 笔记 / 路由），模型按需加载，用户也能用 `/ima-knowledge-base` 这类命令直接调 |
+| 主题自适应 | 全部颜色走 DSH 主题令牌，跟随浅色 / 深色模式实时切换 |
 | 上下文注入 | 模型每轮自动看到知识库清单，主动去查 |
 
 ## 界面预览
@@ -231,6 +233,23 @@ cp ~/.dsh/plugins/dsh-ima/lib/*.js ~/.dsh/profiles/desktop/node_modules/dsh-ima/
 
 所以模型会**主动去查**，而不是说"我看不到你的资料"。
 
+## 技能（会话内调用）
+
+插件自带的技能放在 `skills/` 目录，宿主半启动时把它们注册成 DSH 技能提供方（provider `dsh-ima`，rank 600，与官方内置技能同档、低于用户自定义目录）。注册之后：
+
+- **模型侧**：3 个技能出现在 `<available_skills>` 目录里，模型判断当前任务需要时用内置 skill 工具加载正文，再照着里面的工具顺序去查库。
+- **用户侧**：`user-invocable: true` 的技能会进 `/` 菜单，可以直接敲 `/ima`、`/ima-knowledge-base`、`/ima-notes` 把技能正文塞进当前对话，让它按流程办。
+
+| 技能 | 什么时候用 | 主要做什么 |
+|---|---|---|
+| `ima` | 只说「我的 ima / 知识库 / 我的资料」这类模糊请求 | 伞形路由：判断该走检索还是笔记，附带未绑定时的引导话术 |
+| `ima-knowledge-base` | 「我的资料里有没有 X」「上次那份文档在哪」 | `ima_search_files` 按正文搜 → 定位库/目录 → `ima_read_file` 读全文，并给出带库名的引用规范 |
+| `ima-notes` | 「找一下某次会议记录」「把这篇笔记整理成要点」 | 笔记条目的定位与阅读，说明笔记是服务端展平的纯文本、怎么按锚点重排，以及本插件只读（不新建/追加笔记） |
+
+另外还有一个不进模型的斜杠命令 `/ima <关键词>`：直接在全部知识库里搜正文，结果只给你看、不塞进模型上下文（适合自己翻资料），不带关键词则列出全部知识库。
+
+技能的 frontmatter 由插件自己的极简解析器读取（只认顶层 `key: value`，不引 YAML 库），所以 `description` / `whenToUse` 里不要出现 ASCII 的 `: `；`name` 必须是 kebab-case。加技能就是新建 `skills/<name>/SKILL.md`，重启后自动注册（`npm run test:skills` 可以离线校验）。
+
 ## 架构
 
 ```
@@ -244,6 +263,13 @@ dsh-ima/
 │   ├── client.src.js   界面逻辑源码
 │   ├── viewer.src.js   预览引擎配置
 │   └── build.mjs       构建脚本（esbuild）
+├── skills/             会话内技能（每个子目录一个 SKILL.md）
+│   ├── ima/SKILL.md
+│   ├── ima-knowledge-base/SKILL.md
+│   └── ima-notes/SKILL.md
+├── test/
+│   ├── skills.js       技能注册与 frontmatter 离线校验
+│   └── smoke.js        ima-client 联网冒烟测试
 └── cordis.patch.yml    bundle patch
 ```
 
@@ -257,11 +283,14 @@ dsh-ima/
 cd ~/.dsh/plugins/dsh-ima
 npm install          # 构建依赖（约 400MB，仅开发时需要）
 npm run build        # 重新生成 lib/client.js
-npm test             # ima-client 冒烟测试
+npm test             # 技能注册离线校验 + ima-client 联网冒烟测试
+npm run test:skills  # 只跑离线校验（不需要 ima 凭证）
 ```
 
-改 `build/client.src.js` → `npm run build` → 把 `lib/client.js` 拷进各 profile 的 node_modules → 刷新页面。
-改 `lib/index.js` 等宿主半 → 拷进 profile → **重启 DSH**。
+改 `build/client.src.js` → `npm run build` → 把 `lib/client.js` 拷进各 profile 的 node_modules。DSH 的 client-hmr 会轮询 bundle 变更并让页面热替换插件模块（没反应就刷新页面）。
+改 `lib/index.js` 等宿主半 → 拷进 profile。profile 里开着 `dsh-hmr`：它会对比 profile 下已加载文件与磁盘，发现 `lib/index.js` 变了就 evict + 重启该插件，**通常不需要重启 DSH**。如果没触发，改动一下 profile 的 `cordis.patch.yml`（例如加一行注释）就能让它重新比对——它只认内容变化，`touch` 时间戳不算。
+
+改界面颜色时**不要写死色值**：一律用 DSH 的 `--dsw-alias-*` 令牌（如 `var(--dsw-alias-bg-layer-2)`、`var(--dsw-alias-border-l2)`、`var(--dsw-alias-label-secondary)`），DSH 切到深色时会重绑这些别名，插件面板自动跟随。只有画在彩色块上的图标内容（SVG 里的 `#fff`）和各文件类型的品牌渐变色是刻意写死的。
 
 > `lib/client.js` 是构建产物，已随仓库提供，**普通用户不需要构建**，clone 下来即可使用。
 
@@ -295,6 +324,7 @@ npm test             # ima-client 冒烟测试
 
 | 版本 | 要点 |
 |---|---|
+| 1.8.0 | 主题自适应（全部颜色改用 DSH 主题令牌，跟随浅色/深色）、3 个会话内可调用技能（`ima` / `ima-knowledge-base` / `ima-notes`）+ `/ima` 搜索命令、技能注册离线单测 |
 | 1.7.2 | 笔记预览排版还原：ima 展平的纯文本按锚点重建段落（发言人 + 时间戳 / 中文序号 / 序号列表 / 裸链接），新增「看原文」对照开关与链接识别 |
 | 1.7.1 | 左侧知识库图标统一为单色 macOS 文件夹（之前按库配色太花） |
 | 1.7.0 | macOS 风格类型图标（访达文件夹 + 渐变色块）、左侧改为 ima 同款折叠分组、更新时间通道 |
@@ -317,9 +347,11 @@ npm test             # ima-client 冒烟测试
 **dsh-ima** connects [Tencent ima](https://ima.qq.com) knowledge bases to [DeepSeek Harness](https://github.com/deepseek-ai/deepseek-harness).
 
 - Browse your ima knowledge bases from a sidebar panel (collapsible groups, Finder-style folders, macOS-style type icons, in-panel file preview)
+- **Follows the DSH theme** — every color is a `--dsw-alias-*` token, so the panel switches with light/dark mode
 - **The agent automatically knows your knowledge base exists** — a short summary is injected into the model context at the start of each turn
 - **Full-text search** — ask "does anything I saved mention X?" and the agent searches inside your documents
 - 5 agent tools: `ima_search_files`, `ima_list_knowledge_bases`, `ima_search_knowledge_bases`, `ima_list_kb_files`, `ima_read_file`
+- **3 built-in skills** (`ima`, `ima-knowledge-base`, `ima-notes`) the model loads on demand, plus a `/ima <keyword>` slash command for manual search
 - One-click binding: a browser opens the ima login page, everything else is automatic
 
 **Requirements**: DeepSeek Harness **0.2.0-rc.1** (tested; other 0.2.x likely compatible) · Node.js ≥ 18 (22+ recommended) · Chrome or Edge for one-click binding (falls back to manual setup otherwise). Screenshots above use demo data.
